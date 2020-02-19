@@ -1,0 +1,11 @@
+ext.module_group = "com.afollestad.assure"
+ext.module_name = "core"
+
+apply from: rootProject.file("gradle/android_library_config.gradle")
+
+dependencies {
+  api deps.androidx.biometrics
+
+  compileOnly deps.androidx.annotations
+  implementation deps.kotlin.stdlib8
+}

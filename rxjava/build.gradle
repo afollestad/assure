@@ -1,0 +1,12 @@
+ext.module_group = "com.afollestad.assure"
+ext.module_name = "rxjava"
+
+apply from: rootProject.file("gradle/android_library_config.gradle")
+
+dependencies {
+  api project(':core')
+  api deps.rxjava.rxjava2
+
+  compileOnly deps.androidx.annotations
+  implementation deps.kotlin.stdlib8
+}

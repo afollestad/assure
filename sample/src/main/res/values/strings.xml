@@ -1,0 +1,10 @@
+<resources>
+  <string name="app_name">Assure</string>
+  <string name="prompt_title">Hello, World!</string>
+  <string name="prompt_subtitle">Testing Assure</string>
+  <string name="prompt_description">This is a description</string>
+  <string name="prompt_negative_text">Decline!</string>
+  <string name="type_something">Type something…</string>
+  <string name="decrypt_text">Decrypt</string>
+  <string name="encrypt_text">Encrypt</string>
+</resources>

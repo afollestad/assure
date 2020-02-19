@@ -1,0 +1,17 @@
+ext.module_group = "com.afollestad"
+ext.module_name = "assuresample"
+
+apply from: rootProject.file("gradle/android_application_config.gradle")
+
+dependencies {
+  implementation project(":coroutines")
+  implementation project(":rxjava")
+
+  implementation deps.androidx.app_compat
+  implementation deps.androidx.constraint_layout
+  implementation deps.androidx.ktx.lifecycle
+
+  implementation deps.kotlin.coroutines.android
+  implementation deps.kotlin.coroutines.flow_binding
+  implementation deps.kotlin.stdlib8
+}
