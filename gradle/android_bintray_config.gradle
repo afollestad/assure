@@ -42,7 +42,7 @@ publish {
   artifactId = module_name
   uploadName = "assure:$module_name"
   publishVersion = versions.publish_version
-  desc = "A cool library to do something cool!"
-  website = "Minimal Kotlin wrappers for Android's biometrics APIs."
+  desc = "A Kotlin library that makes biometric authentication quick and easy."
+  website = "https://github.com/afollestad/assure"
   dryRun = false
 }

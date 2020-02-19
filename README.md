@@ -1,5 +1,10 @@
 ## Assure
 
+Assure is a Kotlin library that makes biometric authentication quick and easy.
+
+[![Build Status](https://travis-ci.org/afollestad/assure.svg?branch=master)](https://travis-ci.org/afollestad/assure)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
 ## Table of Contents
 
 2. [Core](#usage)
@@ -80,12 +85,12 @@ and `Fragment` (from AndroidX). Examples are below.*
 ```kotlin
 val prompt: Prompt = // ...
 
-authenticate(prompt) {
-  if (isSuccess) {
+try {
+  authenticate(prompt) {
     // Do something
-  } else {
-    // Handle error with `error` and `errorMessage`
   }
+} catch (e: BiometricErrorException) {
+  // Handle error with `e.error` and `e.errorMessage`
 }
 ```
 
@@ -97,16 +102,16 @@ val credentials = Credentials("default")
 val prompt: Prompt = // ...
 val plainTextData: ByteArray = // ...
 
-authenticateForEncrypt(
-    credentials = credentials,
-    prompt = prompt
-) {
-  if (isSuccess) {
+try {
+  authenticateForEncrypt(
+      credentials = credentials,
+      prompt = prompt
+  ) {
     val encryptedData: ByteArray = encrypt(plainTextData)
     // Use encryptedData
-  } else {
-    // Handle error with `error` and `errorMessage`
   }
+} catch (e: BiometricErrorException) {
+  // Handle error with `e.error` and `e.errorMessage`
 }
 ```
 
@@ -117,16 +122,16 @@ val credentials: Credentials = // ...
 val prompt: Prompt = // ...
 val encryptedData: ByteArray = // ...
 
-authenticateForDecrypt(
-    credentials = credentials,
-    prompt = prompt
-) {
-  if (isSuccess) {
+try {
+  authenticateForDecrypt(
+      credentials = credentials,
+      prompt = prompt
+  ) {
     val decryptedData: ByteArray = decrypt(encryptedData)
     // Use decryptedData
-  } else {
-    // Handle error with `error` and `errorMessage`
   }
+} catch (e: BiometricErrorException) {
+  // Handle error with `e.error` and `e.errorMessage`
 }
 ```
 
@@ -220,11 +225,11 @@ functions \must happen within a `suspend` function or `CoroutineScope`.
 ```kotlin
 import com.afollestad.assure.coroutines.authenticate
 
-val result: Authenticated = authenticate(prompt)
-if (result.isSuccess) {
+try {
+  authenticate(prompt)
   // Do something
-} else {
-  // Handle error with `error` and `errorMessage`
+} catch(e: BiometricErrorException) {
+  // Handle error with `e.error` and `e.errorMessage`
 }
 ```
 
@@ -238,12 +243,12 @@ val credentials = Credentials("default")
 val prompt: Prompt = // ...
 val plainTextData: ByteArray = // ...
 
-val result: AuthenticatedEncryptor = authenticateForEncrypt(credentials, prompt)
-if (result.isSuccess) {
-  val encryptedData: ByteArray = encrypt(plainTextData)
+try {
+  val encryptor: Encryptor = authenticateForEncrypt(credentials, prompt)
+  val encryptedData: ByteArray = encryptor.encrypt(plainTextData)
   // Use encryptedData
-} else {
-  // Handle error with `error` and `errorMessage`
+} catch(e: BiometricErrorException) {
+  // Handle error with `e.error` and `e.errorMessage`
 }
 ```
 
@@ -256,12 +261,12 @@ val credentials: Credentials = // ...
 val prompt: Prompt = // ...
 val encryptedData: ByteArray = // ...
 
-val result: AuthenticatedDecryptor = authenticateForDecrypt(credentials, prompt)
-if (isSuccess) {
-  val decryptedData: ByteArray = decrypt(encryptedData)
+try {
+  val decryptor: Decryptor = authenticateForDecrypt(credentials, prompt)
+  val decryptedData: ByteArray = decryptor.decrypt(encryptedData)
   // Use decryptedData
-} else {
-  // Handle error with `error` and `errorMessage`
+} catch(e: BiometricErrorException) {
+  // Handle error with `e.error` and `e.errorMessage`
 }
 ```
 
