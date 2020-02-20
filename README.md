@@ -2,7 +2,7 @@
 
 Assure is a Kotlin library that makes biometric authentication quick and easy.
 
-[![Build Status](https://travis-ci.org/afollestad/assure.svg?branch=master)](https://travis-ci.org/afollestad/assure)
+![Android CI](https://github.com/afollestad/assure/workflows/Android%20CI/badge.svg)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 ## Table of Contents
