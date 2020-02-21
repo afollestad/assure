@@ -218,7 +218,7 @@ dependencies {
 ### Usage
 
 Coroutines allow you to perform biometric authentication without the callback. These extension
-functions \must happen within a `suspend` function or `CoroutineScope`.
+functions must happen within a `suspend` function or `CoroutineScope`.
 
 **Plain authentication:**
 
