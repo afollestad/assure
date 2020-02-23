@@ -85,8 +85,8 @@ and `Fragment` (from AndroidX). Examples are below.*
 ```kotlin
 val prompt: Prompt = // ...
 
-authenticate(prompt) { error: BiometricErrorException? ->
-  // If `error` is null, else auth was successful.
+authenticate(prompt) { error ->
+  // If `error` IS null, auth was successful.
 }
 ```
 
@@ -101,10 +101,10 @@ val plainTextData: ByteArray = // ...
 authenticateForEncrypt(
     credentials = credentials,
     prompt = prompt
-) { error: BiometricErrorException? ->
-  // Use `error.error` and `error.message` if it isn't null, else auth was successful.
+) { error ->
+  // If `error` is NOT null, there was an error.Handle with `e.error` and `e.errorMessage`. Else...
   val encryptedData: ByteArray = encrypt(plainTextData)
-  // Use encryptedData
+  ...
 }
 ```
 
@@ -118,10 +118,10 @@ val encryptedData: ByteArray = // ...
 authenticateForDecrypt(
     credentials = credentials,
     prompt = prompt
-) { error: BiometricErrorException? ->
-  // Use `error.error` and `error.message` if it isn't null, else auth was successful.
+) { error ->
+  // If `error` is NOT null, there was an error.Handle with `error.error` and `error.errorMessage`. Else...
   val decryptedData: ByteArray = decrypt(encryptedData)
-  // Use decryptedData
+  ...
 }
 ```
 
@@ -136,7 +136,7 @@ it that can be used to convert Credentials to and from ByteArrays.
 val credentials: Credentials = // ...
 
 val serialized: ByteArray = credentials.serialize()
-val deserialized = Credentials.deserialize(serialized)
+val deserialized: Credentials = Credentials.deserialize(serialized)
 ```
 
 This could be used to securely write `Credentials` to a file where it cannot be found by someone
@@ -217,7 +217,7 @@ import com.afollestad.assure.coroutines.authenticate
 
 try {
   authenticate(prompt)
-  // Do something
+  ...
 } catch(e: BiometricErrorException) {
   // Handle error with `e.error` and `e.errorMessage`
 }
@@ -236,7 +236,7 @@ val plainTextData: ByteArray = // ...
 try {
   val encryptor: Encryptor = authenticateForEncrypt(credentials, prompt)
   val encryptedData: ByteArray = encryptor.encrypt(plainTextData)
-  // Use encryptedData
+  ...
 } catch(e: BiometricErrorException) {
   // Handle error with `e.error` and `e.errorMessage`
 }
@@ -254,7 +254,7 @@ val encryptedData: ByteArray = // ...
 try {
   val decryptor: Decryptor = authenticateForDecrypt(credentials, prompt)
   val decryptedData: ByteArray = decryptor.decrypt(encryptedData)
-  // Use decryptedData
+  ...
 } catch(e: BiometricErrorException) {
   // Handle error with `e.error` and `e.errorMessage`
 }
