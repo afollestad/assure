@@ -17,33 +17,26 @@
 
 package com.afollestad.assure.rxjava
 
+import com.afollestad.assure.BiometricErrorException
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
 
 /**
- * Calls the shared consumer with the error sent via onError for each
- * SingleObserver that subscribes to the current Single. Filters errors sent through
- * to the type of [T].
+ * Similar to [Single.doOnError] but only invokes [onError] for [BiometricErrorException].
  *
  * @author Aidan Follestad (@afollestad)
  */
-inline fun <reified T : Throwable> Single<*>.doOnErrorOf(onError: Consumer<T>) =
+fun <T> Single<T>.doOnBiometricError(onError: Consumer<BiometricErrorException>) =
   doOnError { throwable ->
-    if (T::class.java.isAssignableFrom(throwable::class.java)) {
-      onError.accept(throwable as T)
+    if (throwable is BiometricErrorException) {
+      onError.accept(throwable)
     }
   }
 
 /**
- * Calls the shared consumer with the error sent via onError for each
- * SingleObserver that subscribes to the current Single. Filters errors sent through
- * to the type of [T].
+ * Similar to [Single.doOnError] but only invokes [onError] for [BiometricErrorException].
  *
  * @author Aidan Follestad (@afollestad)
  */
-inline fun <reified T : Throwable> Single<*>.doOnErrorOf(noinline onError: (T) -> Unit) =
-  doOnError { throwable ->
-    if (T::class.java.isAssignableFrom(throwable::class.java)) {
-      onError(throwable as T)
-    }
-  }
+fun <T> Single<T>.doOnBiometricError(onError: (error: BiometricErrorException) -> Unit) =
+  doOnBiometricError(Consumer { onError(it) })

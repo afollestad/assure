@@ -42,12 +42,9 @@ fun FragmentActivity.authenticate(
   prompt: Prompt
 ): Completable {
   return Completable.create { emitter ->
-    try {
-      authenticate(prompt) {
-        emitter.onComplete()
-      }
-    } catch (t: Throwable) {
-      emitter.onError(t)
+    authenticate(prompt) { error ->
+      error?.let { emitter.onError(error) }
+          ?: emitter.onComplete()
     }
   }
 }
@@ -67,15 +64,12 @@ fun FragmentActivity.authenticateForEncrypt(
   prompt: Prompt
 ): Single<Encryptor> {
   return Single.create { emitter ->
-    try {
-      authenticateForEncrypt(
-          credentials = credentials,
-          prompt = prompt
-      ) {
-        emitter.onSuccess(this)
-      }
-    } catch (t: Throwable) {
-      emitter.onError(t)
+    authenticateForEncrypt(
+        credentials = credentials,
+        prompt = prompt
+    ) { error ->
+      error?.let { emitter.onError(error) }
+          ?: emitter.onSuccess(this)
     }
   }
 }
@@ -95,15 +89,12 @@ fun FragmentActivity.authenticateForDecrypt(
   prompt: Prompt
 ): Single<Decryptor> {
   return Single.create { emitter ->
-    try {
-      authenticateForDecrypt(
-          credentials = credentials,
-          prompt = prompt
-      ) {
-        emitter.onSuccess(this)
-      }
-    } catch (t: Throwable) {
-      emitter.onError(t)
+    authenticateForDecrypt(
+        credentials = credentials,
+        prompt = prompt
+    ) { error ->
+      error?.let { emitter.onError(error) }
+          ?: emitter.onSuccess(this)
     }
   }
 }

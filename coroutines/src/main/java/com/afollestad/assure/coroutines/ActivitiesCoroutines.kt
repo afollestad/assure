@@ -42,12 +42,9 @@ suspend fun FragmentActivity.authenticate(
   prompt: Prompt
 ) {
   return suspendCoroutine { continuation ->
-    try {
-      authenticate(prompt) {
-        continuation.resume(Unit)
-      }
-    } catch (t: Throwable) {
-      continuation.resumeWithException(t)
+    authenticate(prompt) { error ->
+      error?.let { continuation.resumeWithException(it) }
+          ?: continuation.resume(Unit)
     }
   }
 }
@@ -67,15 +64,12 @@ suspend fun FragmentActivity.authenticateForEncrypt(
   prompt: Prompt
 ): Encryptor {
   return suspendCoroutine { continuation ->
-    try {
-      authenticateForEncrypt(
-          credentials = credentials,
-          prompt = prompt
-      ) {
-        continuation.resume(this)
-      }
-    } catch (t: Throwable) {
-      continuation.resumeWithException(t)
+    authenticateForEncrypt(
+        credentials = credentials,
+        prompt = prompt
+    ) { error ->
+      error?.let { continuation.resumeWithException(it) }
+          ?: continuation.resume(this)
     }
   }
 }
@@ -95,15 +89,12 @@ suspend fun FragmentActivity.authenticateForDecrypt(
   prompt: Prompt
 ): Decryptor {
   return suspendCoroutine { continuation ->
-    try {
-      authenticateForDecrypt(
-          credentials = credentials,
-          prompt = prompt
-      ) {
-        continuation.resume(this)
-      }
-    } catch (t: Throwable) {
-      continuation.resumeWithException(t)
+    authenticateForDecrypt(
+        credentials = credentials,
+        prompt = prompt
+    ) { error ->
+      error?.let { continuation.resumeWithException(it) }
+          ?: continuation.resume(this)
     }
   }
 }

@@ -20,9 +20,10 @@ package com.afollestad.assure.crypto
 import android.util.Base64
 import androidx.annotation.CheckResult
 import androidx.biometric.BiometricPrompt
+import com.afollestad.assure.BiometricErrorException
 import java.nio.charset.Charset
 
-typealias OnDecryptor = Decryptor.() -> Unit
+typealias OnDecryptor = Decryptor.(error: BiometricErrorException?) -> Unit
 
 /**
  * A class that can decrypt data.
@@ -51,6 +52,14 @@ interface Decryptor {
   ): String {
     val rawData: ByteArray = Base64.decode(data, Base64.DEFAULT)
     return decrypt(rawData).toString(charset)
+  }
+}
+
+internal class ErrorDecryptor internal constructor(
+  private val biometricErrorException: BiometricErrorException
+) : Decryptor {
+  override fun decrypt(data: ByteArray): ByteArray {
+    throw biometricErrorException
   }
 }
 

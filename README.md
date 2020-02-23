@@ -31,7 +31,7 @@ Assure is a Kotlin library that makes biometric authentication quick and easy.
 ```gradle
 dependencies {
 
-  implementation 'com.afollestad.assure:core:0.1.0'
+  implementation 'com.afollestad.assure:core:0.2.0'
 }
 ```
 
@@ -85,12 +85,8 @@ and `Fragment` (from AndroidX). Examples are below.*
 ```kotlin
 val prompt: Prompt = // ...
 
-try {
-  authenticate(prompt) {
-    // Do something
-  }
-} catch (e: BiometricErrorException) {
-  // Handle error with `e.error` and `e.errorMessage`
+authenticate(prompt) { error: BiometricErrorException? ->
+  // If `error` is null, else auth was successful.
 }
 ```
 
@@ -102,16 +98,13 @@ val credentials = Credentials("default")
 val prompt: Prompt = // ...
 val plainTextData: ByteArray = // ...
 
-try {
-  authenticateForEncrypt(
-      credentials = credentials,
-      prompt = prompt
-  ) {
-    val encryptedData: ByteArray = encrypt(plainTextData)
-    // Use encryptedData
-  }
-} catch (e: BiometricErrorException) {
-  // Handle error with `e.error` and `e.errorMessage`
+authenticateForEncrypt(
+    credentials = credentials,
+    prompt = prompt
+) { error: BiometricErrorException? ->
+  // Use `error.error` and `error.message` if it isn't null, else auth was successful.
+  val encryptedData: ByteArray = encrypt(plainTextData)
+  // Use encryptedData
 }
 ```
 
@@ -122,16 +115,13 @@ val credentials: Credentials = // ...
 val prompt: Prompt = // ...
 val encryptedData: ByteArray = // ...
 
-try {
-  authenticateForDecrypt(
-      credentials = credentials,
-      prompt = prompt
-  ) {
-    val decryptedData: ByteArray = decrypt(encryptedData)
-    // Use decryptedData
-  }
-} catch (e: BiometricErrorException) {
-  // Handle error with `e.error` and `e.errorMessage`
+authenticateForDecrypt(
+    credentials = credentials,
+    prompt = prompt
+) { error: BiometricErrorException? ->
+  // Use `error.error` and `error.message` if it isn't null, else auth was successful.
+  val decryptedData: ByteArray = decrypt(encryptedData)
+  // Use decryptedData
 }
 ```
 
@@ -209,7 +199,7 @@ interface Decryptor {
 ```gradle
 dependencies {
 
-  implementation 'com.afollestad.assure:coroutines:0.1.0'
+  implementation 'com.afollestad.assure:coroutines:0.2.0'
 }
 ```
 
@@ -281,7 +271,7 @@ try {
 ```gradle
 dependencies {
 
-  implementation 'com.afollestad.assure:rxjava:0.1.0'
+  implementation 'com.afollestad.assure:rxjava:0.2.0'
 }
 ```
 
@@ -298,11 +288,11 @@ functions \must happen within a `suspend` function or `CoroutineScope`.
 import com.afollestad.assure.rxjava.authenticate
 
 val disposable = authenticate(prompt)
-    .doOnErrorOf<BiometricErrorException> { exception ->
-      // Handle error with `exception.error` and `exception.errorMessage`
+    .doOnBiometricError { error ->
+      // Handle error with `error.error` and `error.errorMessage`
     }
     .subscribe {
-      // Do something
+      // Auth was successful, do something
     }
 
 // make sure you manage the subscription
@@ -320,8 +310,8 @@ val prompt: Prompt = // ...
 val plainTextData: ByteArray = // ...
 
 val disposable = authenticateForEncrypt(credentials, prompt)
-    .doOnErrorOf<BiometricErrorException> { exception ->
-      // Handle error with `exception.error` and `exception.errorMessage`
+    .doOnBiometricError { error ->
+      // Handle error with `error.error` and `error.errorMessage`
     }
     .map { encryptor ->
       encryptor.encrypt(plainTextData)
@@ -344,8 +334,8 @@ val prompt: Prompt = // ...
 val encryptedData: ByteArray = // ...
 
 val disposable = authenticateForDecrypt(credentials, prompt)
-    .doOnErrorOf<BiometricErrorException> { exception ->
-      // Handle error with `exception.error` and `exception.errorMessage`
+    .doOnBiometricError { error ->
+      // Handle error with `error.error` and `error.errorMessage`
     }
     .map { decryptor ->
       decryptor.decrypt(encryptedData)

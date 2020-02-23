@@ -39,7 +39,7 @@ import com.afollestad.assure.crypto.OnEncryptor
  */
 fun Fragment.authenticate(
   prompt: Prompt,
-  onAuthentication: () -> Unit
+  onAuthentication: OnAuthentication
 ) {
   val activity = requireActivity()
   val executor = ContextCompat.getMainExecutor(activity)

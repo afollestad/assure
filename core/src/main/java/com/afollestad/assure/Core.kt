@@ -26,6 +26,8 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.afollestad.assure.crypto.Credentials
 import com.afollestad.assure.crypto.Crypto
 import com.afollestad.assure.crypto.CryptoMode
+import com.afollestad.assure.crypto.ErrorDecryptor
+import com.afollestad.assure.crypto.ErrorEncryptor
 import com.afollestad.assure.crypto.OnDecryptor
 import com.afollestad.assure.crypto.OnEncryptor
 import com.afollestad.assure.crypto.RealDecryptor
@@ -47,23 +49,25 @@ internal fun BiometricPrompt.cancelAuthOnPause(
   lifecycleOwner.lifecycle.addObserver(observer)
 }
 
+typealias OnAuthentication = (error: BiometricErrorException?) -> Unit
+
 internal fun createAuthenticateCallback(
-  callback: () -> Unit
+  callback: OnAuthentication
 ): BiometricPrompt.AuthenticationCallback {
   return object : BiometricPrompt.AuthenticationCallback() {
     override fun onAuthenticationError(
       errorCode: Int,
       errString: CharSequence
     ) {
-      throw BiometricErrorException(errorCode.toBiometricError(), errString.toString())
+      callback(BiometricErrorException(errorCode.toBiometricError(), errString.toString()))
     }
 
     override fun onAuthenticationFailed() {
-      throw BiometricErrorException(UNKNOWN, "Unknown failure")
+      callback(BiometricErrorException(UNKNOWN, "Unknown failure"))
     }
 
     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-      callback()
+      callback(null)
     }
   }
 }
@@ -77,18 +81,20 @@ internal fun createEncryptCallback(
       errorCode: Int,
       errString: CharSequence
     ) {
-      throw BiometricErrorException(errorCode.toBiometricError(), errString.toString())
+      val exception = BiometricErrorException(errorCode.toBiometricError(), errString.toString())
+      callback(ErrorEncryptor(exception), exception)
     }
 
     override fun onAuthenticationFailed() {
-      throw BiometricErrorException(UNKNOWN, "Unknown failure")
+      val exception = BiometricErrorException(UNKNOWN, "Unknown failure")
+      callback(ErrorEncryptor(exception), exception)
     }
 
     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
       result.cryptoObject?.let {
         credentials?.iv = it.cipher?.iv ?: error("Unable to get IV")
       }
-      callback(RealEncryptor(cryptoObject = result.cryptoObject))
+      callback(RealEncryptor(cryptoObject = result.cryptoObject), null)
     }
   }
 }
@@ -101,15 +107,17 @@ internal fun createDecryptCallback(
       errorCode: Int,
       errString: CharSequence
     ) {
-      throw BiometricErrorException(errorCode.toBiometricError(), errString.toString())
+      val exception = BiometricErrorException(errorCode.toBiometricError(), errString.toString())
+      callback(ErrorDecryptor(exception), exception)
     }
 
     override fun onAuthenticationFailed() {
-      throw BiometricErrorException(UNKNOWN, "Unknown failure")
+      val exception = BiometricErrorException(UNKNOWN, "Unknown failure")
+      callback(ErrorDecryptor(exception), exception)
     }
 
     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-      callback(RealDecryptor(cryptoObject = result.cryptoObject))
+      callback(RealDecryptor(cryptoObject = result.cryptoObject), null)
     }
   }
 }

@@ -20,9 +20,10 @@ package com.afollestad.assure.crypto
 import android.util.Base64
 import androidx.annotation.CheckResult
 import androidx.biometric.BiometricPrompt
+import com.afollestad.assure.BiometricErrorException
 import java.nio.charset.Charset
 
-typealias OnEncryptor = Encryptor.() -> Unit
+typealias OnEncryptor = Encryptor.(error: BiometricErrorException?) -> Unit
 
 /**
  * A class that can encrypt data.
@@ -50,6 +51,14 @@ interface Encryptor {
     charset: Charset = Charset.defaultCharset()
   ): String {
     return Base64.encodeToString(encrypt(data, charset), Base64.DEFAULT)
+  }
+}
+
+internal class ErrorEncryptor internal constructor(
+  private val biometricErrorException: BiometricErrorException
+) : Encryptor {
+  override fun encrypt(data: ByteArray): ByteArray {
+    throw biometricErrorException
   }
 }
 
