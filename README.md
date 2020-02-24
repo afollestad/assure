@@ -146,7 +146,8 @@ with malicious intent (shared preferences are not recommended for that).
 
 ### More on Encryptor and Decryptor
 
-`Encryptor` and `Decryptor` have a few additional useful methods.
+`Encryptor` and `Decryptor` have a few additional useful methods. These are the classes that are
+`this` in the callbacks of `authenticateForEncrypt(...) { }` and `authenticateForDecrypt(...) { }`.
 
 ```kotlin
 interface Encryptor {
