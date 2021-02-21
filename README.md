@@ -24,7 +24,7 @@ Assure is a Kotlin library that makes biometric authentication quick and easy.
 
 ## Core
 
-[ ![jCenter](https://api.bintray.com/packages/drummer-aidan/maven/assure%3Acore/images/download.svg) ](https://bintray.com/drummer-aidan/maven/assure%3Acore/_latestVersion)
+[ ![Core](https://img.shields.io/maven-central/v/com.afollestad.assure/core?style=flat&label=Core) ](https://repo1.maven.org/maven2/com/afollestad/assure/core)
 
 ### Gradle Dependency
 
@@ -193,7 +193,7 @@ interface Decryptor {
 
 ## Coroutines
 
-[ ![jCenter](https://api.bintray.com/packages/drummer-aidan/maven/assure%3Acoroutines/images/download.svg) ](https://bintray.com/drummer-aidan/maven/assure%3Acoroutines/_latestVersion)
+[ ![Coroutines](https://img.shields.io/maven-central/v/com.afollestad.assure/coroutines?style=flat&label=Core) ](https://repo1.maven.org/maven2/com/afollestad/assure/coroutines)
 
 ### Gradle Dependency
 
@@ -265,7 +265,7 @@ try {
 
 ## RxJava
 
-[ ![jCenter](https://api.bintray.com/packages/drummer-aidan/maven/assure%3Arxjava/images/download.svg) ](https://bintray.com/drummer-aidan/maven/assure%3Arxjava/_latestVersion)
+[ ![RxJava](https://img.shields.io/maven-central/v/com.afollestad.assure/rxjava?style=flat&label=RxJava) ](https://repo1.maven.org/maven2/com/afollestad/assure/rxjava)
 
 ### Gradle Dependency
 
